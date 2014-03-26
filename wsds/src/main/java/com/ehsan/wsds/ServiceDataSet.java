@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ServiceDataSet {
 
@@ -25,7 +29,7 @@ public class ServiceDataSet {
 				int time, serviceId;
 				double value;
 				try {										
-//					int userId = Integer.parseInt(splits[0]);
+					//					int userId = Integer.parseInt(splits[0]);
 					serviceId = Integer.parseInt(splits[1]);
 					time = Integer.parseInt(splits[2]);
 					value = Double.parseDouble(splits[3]);
@@ -135,13 +139,54 @@ public class ServiceDataSet {
 	}
 
 
+	public void makeServiceVector(String rtInputFilename, String tpInputFilename, String avInputFilename) {
+
+		int idCounter = 0;
+		// Load Services
+		List<Service> services = new ArrayList<Service>();
+
+		// Load Single Services from input files
+		
+
+		List<Integer> mySet = new ArrayList<Integer>();
+		mySet.add(1);
+		mySet.add(2);
+		mySet.add(3);
+		mySet.add(4);
+		for (List<Integer> s : powerSet(mySet)) {
+			System.out.println(s);
+		}
+	}
+
+
+	public <T> List<List<T>> powerSet(List<T> originalList) {
+		List<List<T>> Lists = new ArrayList<List<T>>();
+		if (originalList.isEmpty()) {
+			Lists.add(new ArrayList<T>());
+			return Lists;
+		}
+		List<T> list = new ArrayList<T>(originalList);
+		T head = list.get(0);
+		List<T> rest = new ArrayList<T>(list.subList(1, list.size())); 
+		for (List<T> List : powerSet(rest)) {
+			List<T> newList = new ArrayList<T>();
+			newList.add(head);
+			newList.addAll(List);
+			Lists.add(newList);
+			Lists.add(List);
+		}		
+		return Lists;
+	}
+
 	public void run() {
 		//extractAverageServices("../wsdsinput/rtRate","data/service_rt_t", 0.0);
 		//extractAverageServices("../wsdsinput/tpRate","data/service_tp_t", 20.0);
 		//wsCount("../wsdsinput/tpRate");
-		extractAvailability("data/service_rt_t","data/service_av_t");
-		
+		//extractAvailability("data/service_rt_t","data/service_av_t");
+		makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t");
+
 	}
+
 
 
 }
