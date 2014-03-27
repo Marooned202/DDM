@@ -1,7 +1,5 @@
 package com.ehsan.wsds;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Service {
@@ -9,15 +7,6 @@ public class Service {
 	double rt = 0;
 	double av = 0;
 	double tp = 0;	
-	
-	List<Integer> serviceIds = new ArrayList<Integer>();
-	
-	public void addServiceId (int id) {
-		if (serviceIds == null)
-			serviceIds = new ArrayList<Integer>();
-		if (!serviceIds.contains(id))
-			serviceIds.add(id);
-	}
 	
 	public int getId() {
 		return id;
@@ -42,18 +31,33 @@ public class Service {
 	}
 	public void setTp(double tp) {
 		this.tp = tp;
-	}
-	public List<Integer> getServiceIds() {
-		return serviceIds;
-	}
-	public void setServiceIds(List<Integer> serviceIds) {
-		this.serviceIds = serviceIds;
-	}
+	}		
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Service other = (Service) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+	
 	@Override
 	public String toString() {
 		return "Service [id=" + id + ", rt=" + rt + ", av=" + av + ", tp=" + tp
-				+ ", serviceIds=" + serviceIds + "]";
+				+ "]";
 	}
 	
 }

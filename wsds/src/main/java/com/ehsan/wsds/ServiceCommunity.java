@@ -6,36 +6,40 @@ import java.util.List;
 
 public class ServiceCommunity {
 
-	int id;
 	List<Service> services = new ArrayList<Service>();
+	double ex1, ex2;
 	
-	public void addServiceId (Service id) {
-		if (id == null) 
+	public void addService (Service service) {
+		if (service == null) 
 			return;
 		if (services == null)
 			services = new ArrayList<Service>();
-		if (!services.contains(id))
-			services.add(id);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+		if (!services.contains(service))
+			services.add(service);
 	}
 
 	public double getRt() {
-		return 0;
+		double rt=0;
+		for (Service service: services) {
+			rt = Math.max(rt, service.getRt());
+		}		
+		return rt;
 	}
 
 	public double getAv() {
-		return 0;
+		double av=1;
+		for (Service service: services) {
+			av *= (1 - service.getAv());
+		}		
+		return 1-av;
 	}
 	
 	public double getTp() {
-		return 0;
+		double tp=0;
+		for (Service service: services) {
+			tp += service.getTp();
+		}		
+		return tp;
 	}
 
 	public List<Service> getServices() {
@@ -44,11 +48,34 @@ public class ServiceCommunity {
 
 	public void setServices(List<Service> services) {
 		this.services = services;
+	}		
+
+	public double getEx1() {
+		return ex1;
+	}
+
+	public void setEx1(double ex1) {
+		this.ex1 = ex1;
+	}
+
+	public double getEx2() {
+		return ex2;
+	}
+
+	public void setEx2(double ex2) {
+		this.ex2 = ex2;
 	}
 
 	@Override
 	public String toString() {
-		return "ServiceCommunity [id=" + id + ", services=" + services + "]";
+		String str = "<";
+		for (int i = 0; i < services.size()-1; i++) {
+			str += services.get(i).id + ";";
+		}
+		str += services.get(services.size()-1).id + ">";
+		
+		str += ", " + getRt() + ", "  + getTp() + ", " + getAv() + ", " + ex1 + ", " + ex2;
+		return str;
 	}
 	
 }
