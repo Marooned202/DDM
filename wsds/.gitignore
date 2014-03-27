@@ -1,20 +1,57 @@
-.idea
-.c9revisions
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*target*
+*.jar
+*.war
+*.ear
+*.class
+
+# eclipse specific git ignore
+.project
+.metadata
+*.pydevproject
+data/**
+bin/**
+bin/
+target/
+target/**
+build/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# Log Files
+logs/
+logs/**
+
+# Netbeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# IntelliJ
 *.iml
+*.ipr
+*.iws
+.idea/
 
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
+# External tool builders
+.externalToolBuilders/
 
-pids
-logs
-results
-
-npm-debug.log
-node_modules
-bower_components
+# Locally stored "Eclipse launch configurations"
+*.launch
