@@ -72,9 +72,8 @@ public class ServiceCommunity {
 		for (int i = 0; i < services.size()-1; i++) {
 			str += services.get(i).id + ";";
 		}
-		str += services.get(services.size()-1).id + ">";
-		
-		str += ", " + getRt() + ", "  + getTp() + ", " + getAv() + ", " + ex1 + ", " + ex2;
+		str += services.get(services.size()-1).id + ">";	
+		str += String.format(", %.6f, %.6f, %.6f, %.6f, %.6f", getRt(), getTp(), getAv(), ex1, ex2);
 		return str;
 	}
 	

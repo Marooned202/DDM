@@ -236,8 +236,20 @@ public class ServiceDataSet {
 				serviceCommunities.add(serviceCommunity);
 			}
 			
+			double minRt = 10000;
+			double maxAv = 0;
+			for (Service service: twoServices) {
+				if (maxAv < service.getAv()) 
+					maxAv = service.getAv();
+				if (minRt > service.getRt())
+					minRt = service.getRt();
+			}
+			
+			
 			System.out.println("Size:" + serviceCommunities.size());
 			for (ServiceCommunity sc: serviceCommunities) {
+				sc.setEx1(sc.getRt() - minRt);
+				sc.setEx2(maxAv - sc.getAv());
 				pw.println(sc);
 			}
 			pw.close();
