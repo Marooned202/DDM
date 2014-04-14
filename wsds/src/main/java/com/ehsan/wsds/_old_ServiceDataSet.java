@@ -15,7 +15,7 @@ import java.util.Set;
 
 import com.ehsan.wsds.util.Utils;
 
-public class ServiceDataSet {
+public class _old_ServiceDataSet {
 
 	public static final int SIZE_2_C = 80;
 	public static final int SIZE_3_C = 22;
@@ -153,6 +153,10 @@ public class ServiceDataSet {
 		List<Service> services = null;
 		List<ServiceCommunity> serviceCommunities = new ArrayList<ServiceCommunity>();
 
+		List<Service> twoServices = new ArrayList<Service>();
+		List<Service> threeServices = new ArrayList<Service>();
+		List<Service> fourServices = new ArrayList<Service>();
+
 		// Load Single Services from input files
 		int time = 0;
 		try {
@@ -163,28 +167,61 @@ public class ServiceDataSet {
 				serviceCommunity.addService(service);
 				serviceCommunities.add(serviceCommunity);
 			}
-			
-			for (List<Integer> communities: templateVector) {
-				if (communities.size() <= 1) continue;
+
+			PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));
+			// Adding 88 random services for 2 size communities
+			Random rnd = new Random();
+			while (twoServices.size() < SIZE_2_C) {
+				int rndInt = rnd.nextInt(services.size());
+				if (!twoServices.contains(services.get(rndInt)))
+					twoServices.add(services.get(rndInt));
+			}								
+			for (Set<Service> s : Utils.getSubsets(twoServices,2)) {
 				ServiceCommunity serviceCommunity = new ServiceCommunity();
-				for (Integer serviceId: communities) {									
-					serviceCommunity.addService(services.get(serviceId));
+				for (Service service: s) {				
+					serviceCommunity.addService(service);
+				}
+				serviceCommunities.add(serviceCommunity);
+			}
+
+			// size 3 communities
+			while (threeServices.size() < SIZE_3_C) {
+				int rndInt = rnd.nextInt(twoServices.size());
+				if (!threeServices.contains(twoServices.get(rndInt)))
+					threeServices.add(twoServices.get(rndInt));
+			}			
+			for (Set<Service> s : Utils.getSubsets(threeServices,3)) {
+				ServiceCommunity serviceCommunity = new ServiceCommunity();
+				for (Service service: s) {				
+					serviceCommunity.addService(service);
+				}
+				serviceCommunities.add(serviceCommunity);
+			}
+
+			// size 4 communities
+			while (fourServices.size() < SIZE_4_C) {
+				int rndInt = rnd.nextInt(threeServices.size());
+				if (!fourServices.contains(threeServices.get(rndInt)))
+					fourServices.add(threeServices.get(rndInt));
+			}			
+			for (Set<Service> s : Utils.getSubsets(fourServices,4)) {
+				ServiceCommunity serviceCommunity = new ServiceCommunity();
+				for (Service service: s) {				
+					serviceCommunity.addService(service);
 				}
 				serviceCommunities.add(serviceCommunity);
 			}
 
 			double minRt = 10000;
 			double maxAv = 0;
-			for (List<Integer> communities: templateVector) {
-				if (communities.size() != 1) continue;
-				Service service = services.get(communities.get(0));
+			for (Service service: twoServices) {
 				if (maxAv < service.getAv()) 
 					maxAv = service.getAv();
 				if (minRt > service.getRt())
 					minRt = service.getRt();
 			}
 
-			PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));
+
 			System.out.println("Size:" + serviceCommunities.size());
 			for (ServiceCommunity sc: serviceCommunities) {
 				ExternalSetter.setEx1(sc, minRt);
