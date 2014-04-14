@@ -64,6 +64,32 @@ public class ServiceCommunity {
 
 	public void setEx2(double ex2) {
 		this.ex2 = ex2;
+	}		
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((services == null) ? 0 : services.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ServiceCommunity other = (ServiceCommunity) obj;
+		if (services == null) {
+			if (other.services != null)
+				return false;
+		} else if (!services.equals(other.services))
+			return false;
+		return true;
 	}
 
 	@Override
