@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.ehsan.wsds.util.CommunityUtils;
 import com.ehsan.wsds.util.Utils;
 
 public class ServiceDataSet {
@@ -173,16 +174,8 @@ public class ServiceDataSet {
 				serviceCommunities.add(serviceCommunity);
 			}
 
-			double minRt = 10000;
-			double maxAv = 0;
-			for (List<Integer> communities: templateVector) {
-				if (communities.size() != 1) continue;
-				Service service = services.get(communities.get(0));
-				if (maxAv < service.getAv()) 
-					maxAv = service.getAv();
-				if (minRt > service.getRt())
-					minRt = service.getRt();
-			}
+			double minRt = CommunityUtils.findMinRt(templateVector, services);
+			double maxAv = CommunityUtils.findMaxAv(templateVector, services);
 
 			PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));
 			System.out.println("Size:" + serviceCommunities.size());
@@ -339,6 +332,89 @@ public class ServiceDataSet {
 		}			
 		return templateVector;
 	}
+	
+	public boolean communityInTemplateVector(ServiceCommunity joinedCommunity, List<List<Integer>> templateVector) {
+
+		boolean found = false;
+		for (List<Integer> serviceIds: templateVector) {
+			if (joinedCommunity.getServices().size() == serviceIds.size()) {
+				found = true;
+				for (Service service: joinedCommunity.getServices()) {
+					if (!serviceIds.contains(service.getId())) {
+						found = false;
+					}
+				}
+				if (found == true) return true;
+			}
+		}
+		return false;
+	}
+	
+	public void makeServiceMatrix (String rtInputFilename, String tpInputFilename, String avInputFilename, List<List<Integer>> templateVector, String outputfile) {
+
+		// Load Services
+		List<Service> services = null;
+		List<ServiceCommunity> serviceCommunities = new ArrayList<ServiceCommunity>();
+
+		// Load Single Services from input files
+		int time = 0;
+		try {
+			services = extractServicesFromFile(rtInputFilename, tpInputFilename, avInputFilename, time);		
+
+			for (List<Integer> communities: templateVector) {
+				ServiceCommunity serviceCommunity = new ServiceCommunity();
+				for (Integer serviceId: communities) {									
+					serviceCommunity.addService(services.get(serviceId));
+				}
+				serviceCommunities.add(serviceCommunity);
+			}
+
+			double minRt = CommunityUtils.findMinRt(templateVector, services);
+			double maxAv = CommunityUtils.findMaxAv(templateVector, services);
+			
+			System.out.println("Size:" + serviceCommunities.size());
+			for (ServiceCommunity sc: serviceCommunities) {
+				ExternalSetter.setEx1(sc, minRt);
+				ExternalSetter.setEx2(sc, maxAv);				
+			}
+			
+			Double[][] score = new Double[serviceCommunities.size()][serviceCommunities.size()];
+			PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));
+			int i = 0;
+			for (ServiceCommunity scX: serviceCommunities) {
+				int j = 0;
+				for (ServiceCommunity scY: serviceCommunities) {
+					
+					ServiceCommunity mergedCommunity = new ServiceCommunity();
+					mergedCommunity.getServices().addAll(scX.getServices());
+					for (Service service: scY.getServices()) {
+						mergedCommunity.addService(service);
+					}					
+					ExternalSetter.setEx1(mergedCommunity, minRt);
+					ExternalSetter.setEx2(mergedCommunity, maxAv);
+					
+					if (mergedCommunity.getServices().size() > 4) {
+						score[i][j] = null;
+					} else if (communityInTemplateVector (mergedCommunity, templateVector)){
+						score[i][j] = mergedCommunity.getScore() - scX.getScore();
+					} else {
+						score[i][j] = null;
+					}							
+					if (score[i][j] != null)
+						pw.printf("%.6f ", score[i][j]);
+					else 
+						pw.printf("X ", score[i][j]);
+					j++;
+				}
+				i++;
+				pw.println();
+			}
+			pw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	public void run() {
 		//extractAverageServices("../wsdsinput/rtRate","data/service_rt_t", 0.0);
@@ -350,7 +426,8 @@ public class ServiceDataSet {
 		//generateTemplateVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", "data/vector_template");
 		List<List<Integer>> templateVector = loadTempalteVector("data/vector_template");		
 
-		makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
+		//makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
+		makeServiceMatrix("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/matrix_t");
 
 	}
 

@@ -65,6 +65,12 @@ public class ServiceCommunity {
 	public void setEx2(double ex2) {
 		this.ex2 = ex2;
 	}		
+	
+	public double getScore () {
+		double res = 0;
+		res = getRt() + getAv() + getTp() + getEx1() + getEx2();
+		return res;
+	}
 
 	@Override
 	public int hashCode() {
