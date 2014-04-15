@@ -164,7 +164,7 @@ public class ServiceDataSet {
 				serviceCommunity.addService(service);
 				serviceCommunities.add(serviceCommunity);
 			}
-			
+
 			for (List<Integer> communities: templateVector) {
 				if (communities.size() <= 1) continue;
 				ServiceCommunity serviceCommunity = new ServiceCommunity();
@@ -309,11 +309,11 @@ public class ServiceDataSet {
 		}
 		return templateVector;
 	}
-	
+
 	public List<List<Integer>> loadTempalteVector (String filename) {
-		
+
 		List<List<Integer>> templateVector = new ArrayList <List<Integer>>();
-		
+
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(filename));
 			String line;			
@@ -332,7 +332,7 @@ public class ServiceDataSet {
 		}			
 		return templateVector;
 	}
-	
+
 	public boolean communityInTemplateVector(ServiceCommunity joinedCommunity, List<List<Integer>> templateVector) {
 
 		boolean found = false;
@@ -349,7 +349,7 @@ public class ServiceDataSet {
 		}
 		return false;
 	}
-	
+
 	public void makeServiceMatrix (String rtInputFilename, String tpInputFilename, String avInputFilename, List<List<Integer>> templateVector, String outputfile) {
 
 		// Load Services
@@ -357,61 +357,63 @@ public class ServiceDataSet {
 		List<ServiceCommunity> serviceCommunities = new ArrayList<ServiceCommunity>();
 
 		// Load Single Services from input files
-		int time = 0;
-		try {
-			services = extractServicesFromFile(rtInputFilename, tpInputFilename, avInputFilename, time);		
+		for (int time = 0; time < 64; time++) {
+			try {
+				services = extractServicesFromFile(rtInputFilename, tpInputFilename, avInputFilename, time);
+				serviceCommunities = new ArrayList<ServiceCommunity>();
 
-			for (List<Integer> communities: templateVector) {
-				ServiceCommunity serviceCommunity = new ServiceCommunity();
-				for (Integer serviceId: communities) {									
-					serviceCommunity.addService(services.get(serviceId));
+				for (List<Integer> communities: templateVector) {
+					ServiceCommunity serviceCommunity = new ServiceCommunity();
+					for (Integer serviceId: communities) {									
+						serviceCommunity.addService(services.get(serviceId));
+					}
+					serviceCommunities.add(serviceCommunity);
 				}
-				serviceCommunities.add(serviceCommunity);
-			}
 
-			double minRt = CommunityUtils.findMinRt(templateVector, services);
-			double maxAv = CommunityUtils.findMaxAv(templateVector, services);
-			
-			System.out.println("Size:" + serviceCommunities.size());
-			for (ServiceCommunity sc: serviceCommunities) {
-				ExternalSetter.setEx1(sc, minRt);
-				ExternalSetter.setEx2(sc, maxAv);				
-			}
-			
-			Double[][] score = new Double[serviceCommunities.size()][serviceCommunities.size()];
-			PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));
-			int i = 0;
-			for (ServiceCommunity scX: serviceCommunities) {
-				int j = 0;
-				for (ServiceCommunity scY: serviceCommunities) {
-					
-					ServiceCommunity mergedCommunity = new ServiceCommunity();
-					mergedCommunity.getServices().addAll(scX.getServices());
-					for (Service service: scY.getServices()) {
-						mergedCommunity.addService(service);
-					}					
-					ExternalSetter.setEx1(mergedCommunity, minRt);
-					ExternalSetter.setEx2(mergedCommunity, maxAv);
-					
-					if (mergedCommunity.getServices().size() > 4) {
-						score[i][j] = null;
-					} else if (communityInTemplateVector (mergedCommunity, templateVector)){
-						score[i][j] = mergedCommunity.getScore() - scX.getScore();
-					} else {
-						score[i][j] = null;
-					}							
-					if (score[i][j] != null)
-						pw.printf("%.6f ", score[i][j]);
-					else 
-						pw.printf("X ", score[i][j]);
-					j++;
+				double minRt = CommunityUtils.findMinRt(templateVector, services);
+				double maxAv = CommunityUtils.findMaxAv(templateVector, services);
+
+				System.out.println("Size:" + serviceCommunities.size());
+				for (ServiceCommunity sc: serviceCommunities) {
+					ExternalSetter.setEx1(sc, minRt);
+					ExternalSetter.setEx2(sc, maxAv);				
 				}
-				i++;
-				pw.println();
+
+				Double[][] score = new Double[serviceCommunities.size()][serviceCommunities.size()];
+				PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));
+				int i = 0;
+				for (ServiceCommunity scX: serviceCommunities) {
+					int j = 0;
+					for (ServiceCommunity scY: serviceCommunities) {
+
+						ServiceCommunity mergedCommunity = new ServiceCommunity();
+						mergedCommunity.getServices().addAll(scX.getServices());
+						for (Service service: scY.getServices()) {
+							mergedCommunity.addService(service);
+						}					
+						ExternalSetter.setEx1(mergedCommunity, minRt);
+						ExternalSetter.setEx2(mergedCommunity, maxAv);
+
+						if (mergedCommunity.getServices().size() > 4) {
+							score[i][j] = null;
+						} else if (communityInTemplateVector (mergedCommunity, templateVector)){
+							score[i][j] = mergedCommunity.getScore() - scX.getScore();
+						} else {
+							score[i][j] = null;
+						}							
+						if (score[i][j] != null)
+							pw.printf("%.6f ", score[i][j]);
+						else 
+							pw.printf("X ", score[i][j]);
+						j++;
+					}
+					i++;
+					pw.println();
+				}
+				pw.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			pw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}
