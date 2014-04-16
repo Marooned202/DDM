@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
@@ -169,7 +170,7 @@ public class ServiceDataSet {
 				if (communities.size() <= 1) continue;
 				ServiceCommunity serviceCommunity = new ServiceCommunity();
 				for (Integer serviceId: communities) {									
-					serviceCommunity.addService(services.get(serviceId));
+					serviceCommunity.addService(services.stream().filter (s -> s.id == serviceId).findFirst().get());
 				}
 				serviceCommunities.add(serviceCommunity);
 			}
@@ -333,22 +334,7 @@ public class ServiceDataSet {
 		return templateVector;
 	}
 
-	public boolean communityInTemplateVector(ServiceCommunity joinedCommunity, List<List<Integer>> templateVector) {
 
-		boolean found = false;
-		for (List<Integer> serviceIds: templateVector) {
-			if (joinedCommunity.getServices().size() == serviceIds.size()) {
-				found = true;
-				for (Service service: joinedCommunity.getServices()) {
-					if (!serviceIds.contains(service.getId())) {
-						found = false;
-					}
-				}
-				if (found == true) return true;
-			}
-		}
-		return false;
-	}
 
 	public void makeServiceMatrix (String rtInputFilename, String tpInputFilename, String avInputFilename, List<List<Integer>> templateVector, String outputfile) {
 
@@ -365,7 +351,7 @@ public class ServiceDataSet {
 				for (List<Integer> communities: templateVector) {
 					ServiceCommunity serviceCommunity = new ServiceCommunity();
 					for (Integer serviceId: communities) {									
-						serviceCommunity.addService(services.get(serviceId));
+						serviceCommunity.addService(services.stream().filter (s -> s.id == serviceId).findFirst().get());
 					}
 					serviceCommunities.add(serviceCommunity);
 				}
@@ -385,22 +371,7 @@ public class ServiceDataSet {
 				for (ServiceCommunity scX: serviceCommunities) {
 					int j = 0;
 					for (ServiceCommunity scY: serviceCommunities) {
-
-						ServiceCommunity mergedCommunity = new ServiceCommunity();
-						mergedCommunity.getServices().addAll(scX.getServices());
-						for (Service service: scY.getServices()) {
-							mergedCommunity.addService(service);
-						}					
-						ExternalSetter.setEx1(mergedCommunity, minRt);
-						ExternalSetter.setEx2(mergedCommunity, maxAv);
-
-						if (mergedCommunity.getServices().size() > 4) {
-							score[i][j] = null;
-						} else if (communityInTemplateVector (mergedCommunity, templateVector)){
-							score[i][j] = mergedCommunity.getScore() - scX.getScore();
-						} else {
-							score[i][j] = null;
-						}							
+						score[i][j] = CommunityUtils.getBenefitOfJoining(scX, scY, templateVector, minRt, maxAv);						
 						if (score[i][j] != null)
 							pw.printf("%.6f ", score[i][j]);
 						else 

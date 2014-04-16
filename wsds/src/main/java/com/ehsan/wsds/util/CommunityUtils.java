@@ -2,7 +2,9 @@ package com.ehsan.wsds.util;
 
 import java.util.List;
 
+import com.ehsan.wsds.ExternalSetter;
 import com.ehsan.wsds.Service;
+import com.ehsan.wsds.ServiceCommunity;
 
 public class CommunityUtils {
 	
@@ -26,6 +28,42 @@ public class CommunityUtils {
 				maxAv = service.getAv();
 		}
 		return maxAv;
+	}			
+
+	public static boolean communityInTemplateVector(ServiceCommunity joinedCommunity, List<List<Integer>> templateVector) {
+		boolean found = false;
+		for (List<Integer> serviceIds: templateVector) {
+			if (joinedCommunity.getServices().size() == serviceIds.size()) {
+				found = true;
+				for (Service service: joinedCommunity.getServices()) {
+					if (!serviceIds.contains(service.getId())) {
+						found = false;
+					}
+				}
+				if (found == true) return true;
+			}
+		}
+		return false;
+	}
+	
+	public static Double getBenefitOfJoining(ServiceCommunity source, ServiceCommunity joiningCommunity, List<List<Integer>> templateVector, double minRt, double maxAv) {
+		Double result = null;
+		ServiceCommunity mergedCommunity = new ServiceCommunity();
+		mergedCommunity.getServices().addAll(source.getServices());
+		for (Service service: joiningCommunity.getServices()) {
+			mergedCommunity.addService(service);
+		}					
+		ExternalSetter.setEx1(mergedCommunity, minRt);
+		ExternalSetter.setEx2(mergedCommunity, maxAv);
+
+		if (mergedCommunity.getServices().size() > 4) {
+			result = null;
+		} else if (communityInTemplateVector (mergedCommunity, templateVector)){
+			result = mergedCommunity.getScore() - source.getScore();
+		} else {
+			result = null;
+		}	
+		return result;
 	}
 	
 }
