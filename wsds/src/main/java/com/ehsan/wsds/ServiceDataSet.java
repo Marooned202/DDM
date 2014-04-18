@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
+import com.ehsan.wsds.service.SolutionOne;
 import com.ehsan.wsds.util.CommunityUtils;
 import com.ehsan.wsds.util.Utils;
 
@@ -311,16 +312,16 @@ public class ServiceDataSet {
 		return templateVector;
 	}
 
-	public List<List<Integer>> loadTempalteVector (String filename) {
+	public List<Set<Integer>> loadTempalteVector (String filename) {
 
-		List<List<Integer>> templateVector = new ArrayList <List<Integer>>();
+		List<Set<Integer>> templateVector = new ArrayList <Set<Integer>>();
 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(filename));
 			String line;			
 			while ((line = br.readLine()) != null) {
 				if (line.trim().isEmpty()) continue;
-				List<Integer> serviceList = new ArrayList<Integer>();
+				Set<Integer> serviceList = new HashSet<Integer>();
 				String[] splits = line.split("\\s+");
 				for (String serviceId: splits) {
 					serviceList.add(Integer.parseInt(serviceId));
@@ -387,38 +388,7 @@ public class ServiceDataSet {
 			}
 		}
 	}
-
-	public void findBestDecisions(List<List<Integer>> templateVector, String filename) { 
-		int[][] best = new int[templateVector.size()][64];
-
-		for (int time = 0; time < 63; time++) {
-			try {			
-				BufferedReader br = new BufferedReader(new FileReader(filename + time));
-				String line;			
-				int row = 0;
-				while ((line = br.readLine()) != null) {
-					if (line.trim().isEmpty()) continue;
-					String[] split = line.split("\\s+");
-					double bestScore = -1000;
-					int bestScoreIndex = -1;
-					for (int i = 0;i < split.length; i++) {
-						if (split[i].equals("X")) continue;
-						double value = Double.parseDouble(split[i]);
-						if (value > bestScore) {
-							bestScore = value;
-							bestScoreIndex = i;
-						}
-					}
-					best[row][time] = bestScoreIndex;
-					row++;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		System.out.println("hi");
-	}
+	
 
 	public void run() {
 		//extractAverageServices("../wsdsinput/rtRate","data/service_rt_t", 0.0);
@@ -428,12 +398,12 @@ public class ServiceDataSet {
 		//makeTemplateVector();
 
 		//generateTemplateVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", "data/vector_template");
-		List<List<Integer>> templateVector = loadTempalteVector("data/vector_template");		
+		List<Set<Integer>> templateVector = loadTempalteVector("data/vector_template");		
 
 		//makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
 		//makeServiceMatrix("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/matrix_t");
 
-		findBestDecisions (templateVector, "data/matrix_t");
+		new SolutionOne().run(templateVector, "data/matrix_t");		
 
 	}
 

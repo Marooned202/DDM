@@ -1,5 +1,6 @@
 package com.ehsan.wsds.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ehsan.wsds.ExternalSetter;
@@ -7,7 +8,7 @@ import com.ehsan.wsds.Service;
 import com.ehsan.wsds.ServiceCommunity;
 
 public class CommunityUtils {
-	
+
 	public static double findMinRt (List<List<Integer>> templateVector, List<Service> services) {
 		double minRt = 10000;
 		for (List<Integer> communities: templateVector) {
@@ -18,7 +19,7 @@ public class CommunityUtils {
 		}
 		return minRt;
 	}
-	
+
 	public static double findMaxAv (List<List<Integer>> templateVector, List<Service> services) {
 		double maxAv = 0;
 		for (List<Integer> communities: templateVector) {
@@ -45,7 +46,7 @@ public class CommunityUtils {
 		}
 		return false;
 	}
-	
+
 	public static Double getBenefitOfJoining(ServiceCommunity source, ServiceCommunity joiningCommunity, List<List<Integer>> templateVector, double minRt, double maxAv) {
 		Double result = null;
 		ServiceCommunity mergedCommunity = new ServiceCommunity();
@@ -65,5 +66,19 @@ public class CommunityUtils {
 		}	
 		return result;
 	}
-	
+
+	public static List<List<Integer>> extractSingleServices (List<List<Integer>> vector) {
+		List<List<Integer>> singleServices = new ArrayList<List<Integer>>();
+
+		for (List<Integer> community: vector) {
+			if (community.size() == 1) {
+				ArrayList<Integer> newCommunity = new ArrayList<Integer>();
+				newCommunity.add(community.get(0));
+				singleServices.add(newCommunity);
+			}
+		}
+
+		return singleServices;
+	}
+
 }
