@@ -3,6 +3,7 @@ package com.ehsan.wsds.service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,7 +44,7 @@ public class SolutionOne {
 		return best;
 	}
 
-	public int[] findVectorBestArrayTime(List<Set<Integer>> templateVector, List<List<Integer>> vector, String filename, int time) { 
+	public int[] findVectorBestArrayTime(List<Set<Integer>> templateVector, List<Set<Integer>> vector, String filename, int time) { 
 		int[] best = new int[templateVector.size()];
 
 		try {			
@@ -81,21 +82,21 @@ public class SolutionOne {
 		//int[][] bestArray = findAllBestArray(templateVector, filename);
 			
 		//List<List<Integer>> initialSingleServices = CommunityUtils.extractSingleServices(templateVector);
-		List<List<Integer>> test = new ArrayList<List<Integer>>();
+		List<Set<Integer>> test = new ArrayList<Set<Integer>>();
 		
-		ArrayList<Integer> newCommunity = new ArrayList<Integer>();
+		HashSet<Integer> newCommunity = new HashSet<Integer>();
 		newCommunity.add(2571);
 		test.add(newCommunity);
 		
-		newCommunity = new ArrayList<Integer>();
+		newCommunity = new HashSet<Integer>();
 		newCommunity.add(3035);		
 		test.add(newCommunity);
 		
-		newCommunity = new ArrayList<Integer>();
+		newCommunity = new HashSet<Integer>();
 		newCommunity.add(1731);		
 		test.add(newCommunity);
 		
-		newCommunity = new ArrayList<Integer>();
+		newCommunity = new HashSet<Integer>();
 		newCommunity.add(1024);
 		newCommunity.add(938);
 		newCommunity.add(2074);
