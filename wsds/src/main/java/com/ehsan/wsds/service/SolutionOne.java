@@ -81,7 +81,7 @@ public class SolutionOne {
 		
 		//int[][] bestArray = findAllBestArray(templateVector, filename);
 			
-		//List<List<Integer>> initialSingleServices = CommunityUtils.extractSingleServices(templateVector);
+		List<Set<Integer>> initialSingleServices = CommunityUtils.extractSingleServices(templateVector);
 		List<Set<Integer>> test = new ArrayList<Set<Integer>>();
 		
 		HashSet<Integer> newCommunity = new HashSet<Integer>();
@@ -103,7 +103,7 @@ public class SolutionOne {
 		newCommunity.add(1789);
 		test.add(newCommunity);
 
-		int[] bestTest = findVectorBestArrayTime(templateVector, test, filename, 0);
+		int[] bestTest = findVectorBestArrayTime(templateVector, initialSingleServices, filename, 0);		
 		
 		for (int i : bestTest) {
 			System.out.println(i);

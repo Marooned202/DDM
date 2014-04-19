@@ -1,7 +1,9 @@
 package com.ehsan.wsds.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ehsan.wsds.ExternalSetter;
 import com.ehsan.wsds.Service;
@@ -67,13 +69,13 @@ public class CommunityUtils {
 		return result;
 	}
 
-	public static List<List<Integer>> extractSingleServices (List<List<Integer>> vector) {
-		List<List<Integer>> singleServices = new ArrayList<List<Integer>>();
+	public static List<Set<Integer>> extractSingleServices (List<Set<Integer>> vector) {
+		List<Set<Integer>> singleServices = new ArrayList<Set<Integer>>();
 
-		for (List<Integer> community: vector) {
+		for (Set<Integer> community: vector) {
 			if (community.size() == 1) {
-				ArrayList<Integer> newCommunity = new ArrayList<Integer>();
-				newCommunity.add(community.get(0));
+				HashSet<Integer> newCommunity = new HashSet<Integer>();
+				newCommunity.add(community.iterator().next());
 				singleServices.add(newCommunity);
 			}
 		}
