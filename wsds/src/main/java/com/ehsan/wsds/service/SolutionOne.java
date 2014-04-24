@@ -145,7 +145,7 @@ public class SolutionOne {
 		newCommunity.add(1731);		
 		test.add(newCommunity);
 
-		newCommunity = new HashSet<Integer>();
+		newCommunity = new HashSet<Integer>(); 
 		newCommunity.add(1024);
 		newCommunity.add(938);
 		newCommunity.add(2074);
@@ -154,6 +154,8 @@ public class SolutionOne {
 
 		//int[] bestTest = findVectorBestArrayTime(templateVector, initialSingleServices, filename, 0);
 		double[][][] matrix = extractMatrix(templateVector, filename);
+		
+		
 
 		System.out.println(matrix);
 	}
