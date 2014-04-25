@@ -165,11 +165,16 @@ public class SolutionOne {
 	public Set<Integer> findBestCommunity(List<Set<Integer>> templateVector,
 			List<Set<Integer>> services, Set<Integer> serviceGroup,	double[][] matrix, int[][] markMatrix, int time) {
 
+		if (serviceGroup == null) return null;
+		
 		Set<Integer> result = null;
 
 		double value = -0.5;
 		for (Set<Integer> otherServiceGroup: services) {
-			if (matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)] > value) {
+//			System.out.println("serviceGroup: " + serviceGroup);
+//			System.out.println("otherServiceGroup: " + otherServiceGroup);
+			if (matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)] > 0 &&
+					matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)] > value) {
 				value = matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)];
 				result = otherServiceGroup;
 			}
@@ -209,7 +214,7 @@ public class SolutionOne {
 		int[][] markMatrix = new int[templateVector.size()][templateVector.size()];
 		List<Set<Integer>> services = CommunityUtils.extractSingleServices(templateVector);
 
-		for (int time = 0; time < 5; time++) {			
+		for (int time = 0; time < 63; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
 			pickCommunities (templateVector, services, matrix, markMatrix, time);
