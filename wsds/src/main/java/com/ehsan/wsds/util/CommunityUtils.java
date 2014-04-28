@@ -11,31 +11,31 @@ import com.ehsan.wsds.ServiceCommunity;
 
 public class CommunityUtils {
 
-	public static double findMinRt (List<List<Integer>> templateVector, List<Service> services) {
+	public static double findMinRt (List<Set<Integer>> templateVector, List<Service> services) {
 		double minRt = 10000;
-		for (List<Integer> communities: templateVector) {
+		for (Set<Integer> communities: templateVector) {
 			if (communities.size() != 1) continue;
-			Service service = services.get(communities.get(0));
+			Service service = services.get(communities.iterator().next());
 			if (minRt > service.getRt())
 				minRt = service.getRt();
 		}
 		return minRt;
 	}
 
-	public static double findMaxAv (List<List<Integer>> templateVector, List<Service> services) {
+	public static double findMaxAv (List<Set<Integer>> templateVector, List<Service> services) {
 		double maxAv = 0;
-		for (List<Integer> communities: templateVector) {
+		for (Set<Integer> communities: templateVector) {
 			if (communities.size() != 1) continue;
-			Service service = services.get(communities.get(0));
+			Service service = services.get(communities.iterator().next());
 			if (maxAv < service.getAv()) 
 				maxAv = service.getAv();
 		}
 		return maxAv;
 	}			
 
-	public static boolean communityInTemplateVector(ServiceCommunity joinedCommunity, List<List<Integer>> templateVector) {
+	public static boolean communityInTemplateVector(ServiceCommunity joinedCommunity, List<Set<Integer>> templateVector) {
 		boolean found = false;
-		for (List<Integer> serviceIds: templateVector) {
+		for (Set<Integer> serviceIds: templateVector) {
 			if (joinedCommunity.getServices().size() == serviceIds.size()) {
 				found = true;
 				for (Service service: joinedCommunity.getServices()) {
@@ -49,7 +49,7 @@ public class CommunityUtils {
 		return false;
 	}
 
-	public static Double getBenefitOfJoining(ServiceCommunity source, ServiceCommunity joiningCommunity, List<List<Integer>> templateVector, double minRt, double maxAv) {
+	public static Double getBenefitOfJoining(ServiceCommunity source, ServiceCommunity joiningCommunity, List<Set<Integer>> templateVector, double minRt, double maxAv) {
 		Double result = null;
 		ServiceCommunity mergedCommunity = new ServiceCommunity();
 		mergedCommunity.getServices().addAll(source.getServices());

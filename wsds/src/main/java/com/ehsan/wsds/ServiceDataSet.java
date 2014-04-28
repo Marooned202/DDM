@@ -150,7 +150,7 @@ public class ServiceDataSet {
 	}
 
 
-	public void makeServiceVector(String rtInputFilename, String tpInputFilename, String avInputFilename, List<List<Integer>> templateVector, String outputfile) {
+	public void makeServiceVector(String rtInputFilename, String tpInputFilename, String avInputFilename, List<Set<Integer>> templateVector, String outputfile) {
 
 		// Load Services
 		List<Service> services = null;
@@ -167,7 +167,7 @@ public class ServiceDataSet {
 				serviceCommunities.add(serviceCommunity);
 			}
 
-			for (List<Integer> communities: templateVector) {
+			for (Set<Integer> communities: templateVector) {
 				if (communities.size() <= 1) continue;
 				ServiceCommunity serviceCommunity = new ServiceCommunity();
 				for (Integer serviceId: communities) {									
@@ -337,7 +337,7 @@ public class ServiceDataSet {
 
 
 
-	public void makeServiceMatrix (String rtInputFilename, String tpInputFilename, String avInputFilename, List<List<Integer>> templateVector, String outputfile) {
+	public void makeServiceMatrix (String rtInputFilename, String tpInputFilename, String avInputFilename, List<Set<Integer>> templateVector, String outputfile) {
 
 		// Load Services
 		List<Service> services = null;
@@ -349,7 +349,7 @@ public class ServiceDataSet {
 				services = extractServicesFromFile(rtInputFilename, tpInputFilename, avInputFilename, time);
 				serviceCommunities = new ArrayList<ServiceCommunity>();
 
-				for (List<Integer> communities: templateVector) {
+				for (Set<Integer> communities: templateVector) {
 					ServiceCommunity serviceCommunity = new ServiceCommunity();
 					for (Integer serviceId: communities) {									
 						serviceCommunity.addService(services.stream().filter (s -> s.id == serviceId).findFirst().get());
