@@ -189,29 +189,6 @@ public class SolutionOne {
 	public void run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, String filename) {
 
 		//int[][] bestArray = findAllBestArray(templateVector, filename);
-
-
-		List<Set<Integer>> test = new ArrayList<Set<Integer>>();
-		HashSet<Integer> newCommunity = new HashSet<Integer>();
-		newCommunity.add(2571);
-		test.add(newCommunity);
-		newCommunity = new HashSet<Integer>();
-		newCommunity.add(3035);		
-		test.add(newCommunity);
-		newCommunity = new HashSet<Integer>();
-		newCommunity.add(1731);		
-		test.add(newCommunity);
-		newCommunity = new HashSet<Integer>(); 
-		newCommunity.add(1024);
-		newCommunity.add(938);
-		newCommunity.add(2074);
-		newCommunity.add(1789);
-		test.add(newCommunity);	
-		newCommunity = new HashSet<Integer>();
-		newCommunity.add(1731);		
-		test.add(newCommunity);		
-		System.out.println(test.indexOf(newCommunity));
-
 		//int[] bestTest = findVectorBestArrayTime(templateVector, initialSingleServices, filename, 0);
 
 		int[][] markMatrix = new int[templateVector.size()][templateVector.size()];
