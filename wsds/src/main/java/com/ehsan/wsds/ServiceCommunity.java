@@ -1,7 +1,9 @@
 package com.ehsan.wsds;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class ServiceCommunity {
@@ -107,6 +109,16 @@ public class ServiceCommunity {
 		str += services.get(services.size()-1).id + ">";	
 		str += String.format(", %.6f, %.6f, %.6f, %.6f, %.6f", getRt(), getTp(), getAv(), ex1, ex2);
 		return str;
+	}
+	
+	public boolean hasAllServicesOfSet (Set<Integer> servicesSet) {
+		if (services == null) return false;
+		if (servicesSet == null) return false;
+		
+		Set<Integer> temp = new HashSet<Integer>();
+		for (Service service: services) 
+			temp.add(service.getId());
+		return temp.equals(servicesSet);		
 	}
 	
 }

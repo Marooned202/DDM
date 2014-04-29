@@ -194,6 +194,44 @@ public class ServiceDataSet {
 
 	}
 
+	public List<ServiceCommunity> extractServicesOfTemplateVectorFromFile(String rtInputFilename, String tpInputFilename, String avInputFilename, List<Set<Integer>> templateVector, int time) {
+
+		// Load Services
+		List<Service> services = null;
+		List<ServiceCommunity> serviceCommunities = new ArrayList<ServiceCommunity>();
+
+		try {
+			services = extractServicesFromFile(rtInputFilename, tpInputFilename, avInputFilename, time);
+
+			for (Service service: services) {
+				ServiceCommunity serviceCommunity = new ServiceCommunity();
+				serviceCommunity.addService(service);
+				serviceCommunities.add(serviceCommunity);
+			}
+
+			for (Set<Integer> communities: templateVector) {
+				if (communities.size() <= 1) continue;
+				ServiceCommunity serviceCommunity = new ServiceCommunity();
+				for (Integer serviceId: communities) {									
+					serviceCommunity.addService(services.stream().filter (s -> s.id == serviceId).findFirst().get());
+				}
+				serviceCommunities.add(serviceCommunity);
+			}
+
+			double minRt = CommunityUtils.findMinRt(templateVector, services);
+			double maxAv = CommunityUtils.findMaxAv(templateVector, services);
+
+			for (ServiceCommunity sc: serviceCommunities) {
+				ExternalSetter.setEx1(sc, minRt);
+				ExternalSetter.setEx2(sc, maxAv);			
+			}
+		} catch (Exception e) {			
+			e.printStackTrace();
+		} 	
+		
+		return serviceCommunities;
+	}
+
 	private List<Service> extractServicesFromFile(String rtInputFilename, String tpInputFilename, String avInputFilename, int time) throws FileNotFoundException, IOException {
 
 		List<Service> services = new ArrayList<Service>();
@@ -388,7 +426,7 @@ public class ServiceDataSet {
 			}
 		}
 	}
-	
+
 
 	public void run() {
 		//extractAverageServices("../wsdsinput/rtRate","data/service_rt_t", 0.0);
@@ -400,10 +438,13 @@ public class ServiceDataSet {
 		//generateTemplateVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", "data/vector_template");
 		List<Set<Integer>> templateVector = loadTempalteVector("data/vector_template");		
 
-		//makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
-		//makeServiceMatrix("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/matrix_t");
+		makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
+		makeServiceMatrix("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/matrix_t");
 
-		new SolutionOne().run(templateVector, "data/matrix_t");		
+		List<ServiceCommunity> serviceCommunityList = 
+				extractServicesOfTemplateVectorFromFile("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, 0);
+		
+		new SolutionOne().run(templateVector, serviceCommunityList, "data/matrix_t");		
 
 	}
 

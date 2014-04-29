@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ehsan.wsds.Service;
+import com.ehsan.wsds.ServiceCommunity;
 import com.ehsan.wsds.util.CommunityUtils;
 
 public class SolutionOne {
@@ -137,7 +138,7 @@ public class SolutionOne {
 		for (Set<Integer> serviceGroup: copyForLoopServices) {
 			Set<Integer> best = findBestCommunity (templateVector, services, serviceGroup, matrix, markMatrix, time);
 			if (best != null && serviceGroup.equals(findBestCommunity (templateVector, services, best, matrix, markMatrix, time))) {
-				System.out.println("ServiceGroup: " + serviceGroup + " and " + best + " are double bests.");		
+				//System.out.println("ServiceGroup: " + serviceGroup + " and " + best + " are double bests.");		
 
 				Set<Integer> newGroup = new HashSet<Integer>();
 				newGroup.addAll(serviceGroup);
@@ -185,7 +186,7 @@ public class SolutionOne {
 		return result;		
 	}
 
-	public void run (List<Set<Integer>> templateVector, String filename) {
+	public void run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, String filename) {
 
 		//int[][] bestArray = findAllBestArray(templateVector, filename);
 
@@ -223,8 +224,14 @@ public class SolutionOne {
 		}
 		
 		System.out.println("List of services: ");
-		for (Set<Integer> service: services) {
+		for (Set<Integer> service: services) {						
 			System.out.println(service);
+			for (ServiceCommunity serviceCommunity: serviceCommunityList) {
+				if (serviceCommunity.hasAllServicesOfSet(service)) {
+					System.out.println(serviceCommunity);
+					break;
+				}				
+			}
 		}
 
 	}
