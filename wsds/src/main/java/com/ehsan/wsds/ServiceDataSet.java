@@ -453,7 +453,7 @@ public class ServiceDataSet {
 		List<Set<Integer>> templateVector = loadTempalteVector("data/vector_template");		
 
 		//makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
-		makeServiceMatrix("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"matrix_t");
+		//makeServiceMatrix("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"matrix_t");
 
 		List<ServiceCommunity> serviceCommunityList = 
 				extractServicesOfTemplateVectorFromFile("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, 0);
