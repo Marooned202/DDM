@@ -11,6 +11,9 @@ public class Stat {
 		totalValue += value;
 	}
 	
+	public double getFinalValue () {
+		return (double)getTotalValue() / (double)getNum();
+	}
 	
 	public double getTotalValue() {
 		return totalValue;

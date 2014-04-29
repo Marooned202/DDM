@@ -10,15 +10,14 @@ import java.util.Set;
 import com.ehsan.wsds.Service;
 import com.ehsan.wsds.ServiceCommunity;
 import com.ehsan.wsds.util.CommunityUtils;
+import com.ehsan.wsds.util.Constants;
 
 public class SolutionOne {
-
-	public static final int MAX_TIME = 10;
-
+	
 	public int[][] findAllBestArray(List<List<Integer>> templateVector, String filename) { 
-		int[][] best = new int[templateVector.size()][MAX_TIME];
+		int[][] best = new int[templateVector.size()][Constants.MAX_TIME];
 
-		for (int time = 0; time < MAX_TIME; time++) {
+		for (int time = 0; time < Constants.MAX_TIME; time++) {
 			System.out.println("Readiing collabration matrix: " + time);
 			try {			
 				BufferedReader br = new BufferedReader(new FileReader(filename + time));
@@ -88,7 +87,7 @@ public class SolutionOne {
 	public double[][] extractMatrix (List<Set<Integer>> templateVector, int[][] mark, String filename, int time) { 
 		double[][] matrix = new double[templateVector.size()][templateVector.size()];
 
-		for (int t = 0; t < MAX_TIME; t++) {
+		for (int t = 0; t < Constants.MAX_TIME; t++) {
 			for (int i = 0; i < matrix[0].length; i++) {
 				for (int j = 0; i < matrix[0].length; i++) {
 					matrix[i][j] = -1;
@@ -127,7 +126,7 @@ public class SolutionOne {
 	}
 
 	public void markMatrix (double[][][] matrix, int i, int j, double value) {		
-		for (int time = 0; time < MAX_TIME; time++) {
+		for (int time = 0; time < Constants.MAX_TIME; time++) {
 			matrix[i][j][time] = value;
 		}
 	}
@@ -182,7 +181,7 @@ public class SolutionOne {
 			}
 		}		
 
-		System.out.println("Best Value: " + value + " , best Choice: " + result + ", for: " + serviceGroup);
+		//System.out.println("Best Value: " + value + " , best Choice: " + result + ", for: " + serviceGroup);
 		return result;		
 	}
 
@@ -194,7 +193,7 @@ public class SolutionOne {
 		int[][] markMatrix = new int[templateVector.size()][templateVector.size()];
 		List<Set<Integer>> services = CommunityUtils.extractSingleServices(templateVector);
 
-		for (int time = 0; time < 63; time++) {			
+		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
 			pickCommunities (templateVector, services, matrix, markMatrix, time);

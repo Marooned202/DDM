@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
 import com.ehsan.wsds.service.SolutionOne;
 import com.ehsan.wsds.util.CommunityUtils;
+import com.ehsan.wsds.util.Constants;
+import com.ehsan.wsds.util.StatisticsUtils;
 import com.ehsan.wsds.util.Utils;
 
 public class ServiceDataSet {
@@ -73,16 +74,29 @@ public class ServiceDataSet {
 			}
 			br.close();
 
-			System.out.println("Time Size: " + serviceDataTime.keySet().size());
+			System.out.println("Time Size: " + serviceDataTime.keySet().size());			
 
 			// OUTPUT
 			for (int time: serviceDataTime.keySet()) {
 				PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));		
 				HashMap<Integer, Stat> serviceData = serviceDataTime.get(time);
+												
+				/*
 				for (int serviceId: serviceData.keySet()) {
 					pw.printf("%d %f %d\n", 
 							serviceId, 
 							(double)serviceData.get(serviceId).getTotalValue() / (double)serviceData.get(serviceId).getNum(), 
+							serviceData.get(serviceId).getNum());
+
+				}
+				*/
+				
+				// Normal
+				HashMap<Integer, Double> serviceNormal = StatisticsUtils.normalizeStats (serviceData);
+				for (int serviceId: serviceNormal.keySet()) {
+					pw.printf("%d %f %d\n", 
+							serviceId, 
+							(double)serviceNormal.get(serviceId), 
 							serviceData.get(serviceId).getNum());
 
 				}
@@ -129,7 +143,7 @@ public class ServiceDataSet {
 	//	}
 
 	public void extractAvailability(String inputfile, String outputfile) {
-		for (int time = 0; time < 64; time++) {
+		for (int time = 0; time < Constants.MAX_TIME; time++) {
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(inputfile+time));
 				PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));
@@ -382,7 +396,7 @@ public class ServiceDataSet {
 		List<ServiceCommunity> serviceCommunities = new ArrayList<ServiceCommunity>();
 
 		// Load Single Services from input files
-		for (int time = 0; time < 64; time++) {
+		for (int time = 0; time < Constants.MAX_TIME; time++) {
 			try {
 				services = extractServicesFromFile(rtInputFilename, tpInputFilename, avInputFilename, time);
 				serviceCommunities = new ArrayList<ServiceCommunity>();
@@ -429,23 +443,24 @@ public class ServiceDataSet {
 
 
 	public void run() {
-		//extractAverageServices("../wsdsinput/rtRate","data/service_rt_t", 0.0);
-		//extractAverageServices("../wsdsinput/tpRate","data/service_tp_t", 20.0);
+		String filenamePrefix = "nl_";
+		
+		extractAverageServices("../wsdsinput/rtRate","data/"+filenamePrefix+"service_rt_t", 0.0);
+		extractAverageServices("../wsdsinput/tpRate","data/"+filenamePrefix+"service_tp_t", 20.0);
 		//wsCount("../wsdsinput/tpRate");
-		//extractAvailability("data/service_rt_t","data/service_av_t");
-		//makeTemplateVector();
-
-		//generateTemplateVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", "data/vector_template");
+		//extractAvailability("data/"+filenamePrefix+"service_rt_t","data/"+filenamePrefix+"service_av_t");		
+/*
+		generateTemplateVector("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", "data/"+filenamePrefix+"vector_template");
 		List<Set<Integer>> templateVector = loadTempalteVector("data/vector_template");		
 
-		makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
-		makeServiceMatrix("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/matrix_t");
+		//makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
+		makeServiceMatrix("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"matrix_t");
 
 		List<ServiceCommunity> serviceCommunityList = 
-				extractServicesOfTemplateVectorFromFile("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, 0);
+				extractServicesOfTemplateVectorFromFile("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, 0);
 		
-		new SolutionOne().run(templateVector, serviceCommunityList, "data/matrix_t");		
-
+		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t");		
+*/
 	}
 
 
