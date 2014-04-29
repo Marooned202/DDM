@@ -70,7 +70,8 @@ public class ServiceCommunity {
 	
 	public double getScore () {
 		double res = 0;
-		res = getRt() + getAv() + getTp() + getEx1() + getEx2();
+		//res = getRt() + getAv() + getTp() + getEx1() + getEx2();
+		res = ((getTp() - getRt()) *  getAv()) - getEx1() - getEx2();
 		return res;
 	}
 
@@ -107,7 +108,7 @@ public class ServiceCommunity {
 			str += services.get(i).id + ";";
 		}
 		str += services.get(services.size()-1).id + ">";	
-		str += String.format(", %.6f, %.6f, %.6f, %.6f, %.6f", getRt(), getTp(), getAv(), ex1, ex2);
+		str += String.format(", %.6f, %.6f, %.6f, %.6f, %.6f, Utility: %.6f", getRt(), getTp(), getAv(), ex1, ex2, getScore());
 		return str;
 	}
 	

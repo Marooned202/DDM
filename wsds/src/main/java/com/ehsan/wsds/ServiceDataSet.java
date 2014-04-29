@@ -80,17 +80,15 @@ public class ServiceDataSet {
 			for (int time: serviceDataTime.keySet()) {
 				PrintWriter pw=new PrintWriter(new FileOutputStream(outputfile+time));		
 				HashMap<Integer, Stat> serviceData = serviceDataTime.get(time);
-												
-				/*
-				for (int serviceId: serviceData.keySet()) {
-					pw.printf("%d %f %d\n", 
-							serviceId, 
-							(double)serviceData.get(serviceId).getTotalValue() / (double)serviceData.get(serviceId).getNum(), 
-							serviceData.get(serviceId).getNum());
-
-				}
-				*/
-				
+																
+//				for (int serviceId: serviceData.keySet()) {
+//					pw.printf("%d %f %d\n", 
+//							serviceId, 
+//							(double)serviceData.get(serviceId).getTotalValue() / (double)serviceData.get(serviceId).getNum(), 
+//							serviceData.get(serviceId).getNum());
+//
+//				}
+								
 				// Normal
 				HashMap<Integer, Double> serviceNormal = StatisticsUtils.normalizeStats (serviceData);
 				for (int serviceId: serviceNormal.keySet()) {
@@ -100,11 +98,12 @@ public class ServiceDataSet {
 							serviceData.get(serviceId).getNum());
 
 				}
+								
 				pw.close();
 			}
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -443,14 +442,14 @@ public class ServiceDataSet {
 
 
 	public void run() {
-		String filenamePrefix = "nl_";
+		String filenamePrefix = "norm_";
 		
-		extractAverageServices("../wsdsinput/rtRate","data/"+filenamePrefix+"service_rt_t", 0.0);
-		extractAverageServices("../wsdsinput/tpRate","data/"+filenamePrefix+"service_tp_t", 20.0);
+		//extractAverageServices("../wsdsinput/rtRate","data/"+filenamePrefix+"service_rt_t", 0.0);
+		//extractAverageServices("../wsdsinput/tpRate","data/"+filenamePrefix+"service_tp_t", 20.0);
 		//wsCount("../wsdsinput/tpRate");
 		//extractAvailability("data/"+filenamePrefix+"service_rt_t","data/"+filenamePrefix+"service_av_t");		
-/*
-		generateTemplateVector("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", "data/"+filenamePrefix+"vector_template");
+
+		//generateTemplateVector("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", "data/"+filenamePrefix+"vector_template");
 		List<Set<Integer>> templateVector = loadTempalteVector("data/vector_template");		
 
 		//makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
@@ -460,7 +459,7 @@ public class ServiceDataSet {
 				extractServicesOfTemplateVectorFromFile("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, 0);
 		
 		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t");		
-*/
+
 	}
 
 
