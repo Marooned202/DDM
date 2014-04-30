@@ -184,6 +184,28 @@ public class SolutionOne {
 		//System.out.println("Best Value: " + value + " , best Choice: " + result + ", for: " + serviceGroup);
 		return result;		
 	}
+	
+	public Set<Set<Integer>> findBestNCommunity(List<Set<Integer>> templateVector,
+			List<Set<Integer>> services, Set<Integer> serviceGroup,	double[][] matrix, int[][] markMatrix, int time, int n) {
+
+		if (serviceGroup == null) return null;
+		
+		Set<Set<Integer>> result = new HashSet<Set<Integer>>();
+
+		double value = -0.5;
+		for (Set<Integer> otherServiceGroup: services) {
+//			System.out.println("serviceGroup: " + serviceGroup);
+//			System.out.println("otherServiceGroup: " + otherServiceGroup);
+			if (matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)] > 0 &&
+					matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)] > value) {
+				value = matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)];
+				//result = otherServiceGroup;
+			}
+		}		
+
+		//System.out.println("Best Value: " + value + " , best Choice: " + result + ", for: " + serviceGroup);
+		return result;		
+	}
 
 	public void run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, String filename) {
 
