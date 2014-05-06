@@ -252,6 +252,8 @@ public class SolutionOne {
 					markMatrix[n][i] = -1;
 					markMatrix[j][n] = -1;
 					markMatrix[n][j] = -1;
+					
+					break;
 				}
 			}		
 		}
