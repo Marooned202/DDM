@@ -1,7 +1,10 @@
 package com.ehsan.wsds.service;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -290,7 +293,7 @@ public class SolutionOne {
 		return result;		
 	}
 
-	public void run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, String filename) {
+	public void run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, String filename, String output) throws FileNotFoundException {
 
 		//int[][] bestArray = findAllBestArray(templateVector, filename);
 		//int[] bestTest = findVectorBestArrayTime(templateVector, initialSingleServices, filename, 0);
@@ -301,19 +304,22 @@ public class SolutionOne {
 		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
-			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/10);
+			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/5);
 		}
 
 		System.out.println("List of services: ");
+		PrintWriter pw=new PrintWriter(new FileOutputStream(output));
 		for (Set<Integer> service: services) {						
-			System.out.println(service);
+			//System.out.println(service);
 			for (ServiceCommunity serviceCommunity: serviceCommunityList) {
 				if (serviceCommunity.hasAllServicesOfSet(service)) {
 					System.out.println(serviceCommunity);
+					pw.println (serviceCommunity);
 					break;
 				}				
 			}
 		}
+		pw.close();
 
 	}
 
