@@ -220,7 +220,8 @@ public class SolutionOne {
 		return result;		
 	}
 	
-	public void pickBestNCommunities(List<Set<Integer>> templateVector, List<Set<Integer>> services, double[][] matrix, int[][] markMatrix, int time, int num) {	
+	public void pickBestNCommunities(List<Set<Integer>> templateVector, List<Set<Integer>> services, double[][] matrix, int[][] markMatrix, int time, int num) {
+		System.out.println("Num: " + num);
 		List<Set<Integer>> copyForLoopServices = new ArrayList<Set<Integer>>();
 		copyForLoopServices.addAll(services);
 		for (Set<Integer> serviceGroup: copyForLoopServices) {
@@ -295,7 +296,7 @@ public class SolutionOne {
 		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
-			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/15);
+			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/4);
 		}
 		
 		System.out.println("List of services: ");
