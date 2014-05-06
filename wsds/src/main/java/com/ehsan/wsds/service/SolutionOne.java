@@ -14,11 +14,11 @@ import com.ehsan.wsds.util.CommunityUtils;
 import com.ehsan.wsds.util.Constants;
 
 public class SolutionOne {
-	
+
 	class ServiceScore implements Comparable<ServiceScore> {
 		Set<Integer> services;
 		double score;
-			
+
 		public Set<Integer> getServices() {
 			return services;
 		}
@@ -45,10 +45,10 @@ public class SolutionOne {
 			return "ServiceScore [services=" + services + ", score=" + score
 					+ "]";
 		}	
-		
-		
+
+
 	}
-	
+
 	public int[][] findAllBestArray(List<List<Integer>> templateVector, String filename) { 
 		int[][] best = new int[templateVector.size()][Constants.MAX_TIME];
 
@@ -202,13 +202,13 @@ public class SolutionOne {
 			List<Set<Integer>> services, Set<Integer> serviceGroup,	double[][] matrix, int[][] markMatrix, int time) {
 
 		if (serviceGroup == null) return null;
-		
+
 		Set<Integer> result = null;
 
 		double value = -0.5;
 		for (Set<Integer> otherServiceGroup: services) {
-//			System.out.println("serviceGroup: " + serviceGroup);
-//			System.out.println("otherServiceGroup: " + otherServiceGroup);
+			//			System.out.println("serviceGroup: " + serviceGroup);
+			//			System.out.println("otherServiceGroup: " + otherServiceGroup);
 			if (matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)] > 0 &&
 					matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)] > value) {
 				value = matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(otherServiceGroup)];
@@ -219,48 +219,51 @@ public class SolutionOne {
 		//System.out.println("Best Value: " + value + " , best Choice: " + result + ", for: " + serviceGroup);
 		return result;		
 	}
-	
+
 	public void pickBestNCommunities(List<Set<Integer>> templateVector, List<Set<Integer>> services, double[][] matrix, int[][] markMatrix, int time, int num) {
 		System.out.println("Num: " + num);
 		List<Set<Integer>> copyForLoopServices = new ArrayList<Set<Integer>>();
 		copyForLoopServices.addAll(services);
 		for (Set<Integer> serviceGroup: copyForLoopServices) {
-			Set<Integer> best = findBestCommunity (templateVector, services, serviceGroup, matrix, markMatrix, time);
-			Set<Set<Integer>> bestNofBest = findBestNCommunity (templateVector, services, best, matrix, markMatrix, time, 3);			
-			if (best != null && bestNofBest.contains(serviceGroup)) {
-				//System.out.println("ServiceGroup: " + serviceGroup + " and " + best + " are double bests.");		
+			//Set<Integer> best = findBestCommunity (templateVector, services, serviceGroup, matrix, markMatrix, time);
+			Set<Set<Integer>> bestN = findBestNCommunity (templateVector, services, serviceGroup, matrix, markMatrix, time, num);
+			for (Set<Integer> best: bestN) {
+				Set<Set<Integer>> bestNofBest = findBestNCommunity (templateVector, services, best, matrix, markMatrix, time, num);			
+				if (best != null && bestNofBest.contains(serviceGroup)) {
+					//System.out.println("ServiceGroup: " + serviceGroup + " and " + best + " are double bests.");		
 
-				Set<Integer> newGroup = new HashSet<Integer>();
-				newGroup.addAll(serviceGroup);
-				newGroup.addAll(best);				
+					Set<Integer> newGroup = new HashSet<Integer>();
+					newGroup.addAll(serviceGroup);
+					newGroup.addAll(best);				
 
-				if (!services.contains(newGroup)) {
-					System.out.println("New group formed: " + newGroup);
-					services.add(newGroup);
+					if (!services.contains(newGroup)) {
+						System.out.println("New group formed: " + newGroup);
+						services.add(newGroup);
+					}
+
+					int i = templateVector.indexOf(serviceGroup);
+					int j = templateVector.indexOf(best);
+					int n = templateVector.indexOf(newGroup);
+					markMatrix[i][j] = -1;
+					//				matrix[i][j] = -1;
+					markMatrix[j][i] = -1;
+					//				matrix[j][i] = -1;
+					markMatrix[i][n] = -1;
+					markMatrix[n][i] = -1;
+					markMatrix[j][n] = -1;
+					markMatrix[n][j] = -1;
 				}
-
-				int i = templateVector.indexOf(serviceGroup);
-				int j = templateVector.indexOf(best);
-				int n = templateVector.indexOf(newGroup);
-				markMatrix[i][j] = -1;
-				//				matrix[i][j] = -1;
-				markMatrix[j][i] = -1;
-				//				matrix[j][i] = -1;
-				markMatrix[i][n] = -1;
-				markMatrix[n][i] = -1;
-				markMatrix[j][n] = -1;
-				markMatrix[n][j] = -1;
-			}
-		}		
+			}		
+		}
 	}
-	
+
 	public Set<Set<Integer>> findBestNCommunity(List<Set<Integer>> templateVector,
 			List<Set<Integer>> services, Set<Integer> serviceGroup,	double[][] matrix, int[][] markMatrix, int time, int n) {
 
 		if (serviceGroup == null) return null;
-		
+
 		List<ServiceScore> serviceScores = new ArrayList<ServiceScore>();
-		
+
 		Set<Set<Integer>> result = new HashSet<Set<Integer>>();
 
 		double value = -0.5;
@@ -273,9 +276,9 @@ public class SolutionOne {
 				serviceScores.add(serviceScore);
 			}
 		}		
-		
+
 		Collections.sort(serviceScores);
-		
+
 		for (int i = 0; i < n && i < serviceScores.size();i++) {
 			result.add(serviceScores.get(i).getServices());
 			//System.out.println("i: " + i + ": " + serviceScores.get(i));
@@ -296,9 +299,9 @@ public class SolutionOne {
 		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
-			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/4);
+			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/10);
 		}
-		
+
 		System.out.println("List of services: ");
 		for (Set<Integer> service: services) {						
 			System.out.println(service);
