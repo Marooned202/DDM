@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Utils {
-	
+
 	private static <T> void getSubsets(List<T> superSet, int k, int idx, Set<T> current,List<Set<T>> solution) {
 		//successful stop clause
 		if (current.size() == k) {
@@ -23,7 +23,7 @@ public class Utils {
 		//"guess" x is not in the subset
 		getSubsets(superSet, k, idx+1, current, solution);
 	}
-	
+
 	public static <T> List<Set<T>> getSubsets(List<T> superSet, int k) {
 		List<Set<T>> res = new ArrayList<>();
 		getSubsets(superSet, k, 0, new HashSet<T>(), res);
@@ -48,5 +48,12 @@ public class Utils {
 			Lists.add(List);
 		}		
 		return Lists;
+	}
+
+	public static <T> Set<T> intersection (Set<T> s1, Set<T> s2) {
+		if (s1 == null || s2 == null) return null;
+		Set<T> intersection = new HashSet<T>(s1);
+		intersection.retainAll(s2);
+		return intersection;
 	}
 }
