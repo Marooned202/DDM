@@ -442,7 +442,7 @@ public class ServiceDataSet {
 
 
 	public void run() throws IOException {
-		String filenamePrefix = "";
+		String filenamePrefix = "coef_half_";
 		
 		//extractAverageServices("../wsdsinput/rtRate","data/"+filenamePrefix+"service_rt_t", 0.0);
 		//extractAverageServices("../wsdsinput/tpRate","data/"+filenamePrefix+"service_tp_t", 20.0);
@@ -458,7 +458,7 @@ public class ServiceDataSet {
 		List<ServiceCommunity> serviceCommunityList = 
 				extractServicesOfTemplateVectorFromFile("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, 0);
 		
-		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_2");		
+		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_10");		
 
 	}
 
