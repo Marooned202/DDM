@@ -442,23 +442,25 @@ public class ServiceDataSet {
 
 
 	public void run() throws IOException {
-		String filenamePrefix = "coef_half_";
-		
-		//extractAverageServices("../wsdsinput/rtRate","data/"+filenamePrefix+"service_rt_t", 0.0);
-		//extractAverageServices("../wsdsinput/tpRate","data/"+filenamePrefix+"service_tp_t", 20.0);
+		String intputFilenamePrefix = "";
+		String filenamePrefix = "score_0_25_";
+		String vectorFileName = "data/vector_template";
+				
+		//extractAverageServices("../wsdsinput/rtRate","data/"+intputFilenamePrefix+"service_rt_t", 0.0);
+		//extractAverageServices("../wsdsinput/tpRate","data/"+intputFilenamePrefix+"service_tp_t", 20.0);
 		//wsCount("../wsdsinput/tpRate");
-		//extractAvailability("data/"+filenamePrefix+"service_rt_t","data/"+filenamePrefix+"service_av_t");		
+		//extractAvailability("data/"+intputFilenamePrefix+"service_rt_t","data/"+intputFilenamePrefix+"service_av_t");		
 
-		//generateTemplateVector("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", "data/"+filenamePrefix+"vector_template");
-		List<Set<Integer>> templateVector = loadTempalteVector("data/vector_template");		
+		//generateTemplateVector("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", vectorFileName);
+		List<Set<Integer>> templateVector = loadTempalteVector(vectorFileName);		
 
-		//makeServiceVector("data/service_rt_t", "data/service_tp_t", "data/service_av_t", templateVector, "data/vector_t");
-		//makeServiceMatrix("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"matrix_t");
+		makeServiceVector("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"vector_t");
+		makeServiceMatrix("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"matrix_t");
 
 		List<ServiceCommunity> serviceCommunityList = 
-				extractServicesOfTemplateVectorFromFile("data/"+filenamePrefix+"service_rt_t", "data/"+filenamePrefix+"service_tp_t", "data/"+filenamePrefix+"service_av_t", templateVector, 0);
+				extractServicesOfTemplateVectorFromFile("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", templateVector, 0);
 		
-		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_10");		
+		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_15");		
 
 	}
 

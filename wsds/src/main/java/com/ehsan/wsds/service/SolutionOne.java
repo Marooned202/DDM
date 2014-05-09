@@ -304,7 +304,7 @@ public class SolutionOne {
 		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
-			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/10);
+			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/15);
 		}
 
 		System.out.println("List of services: ");
