@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.ehsan.wsds.Service;
 import com.ehsan.wsds.ServiceCommunity;
+import com.ehsan.wsds.tree.Node;
 import com.ehsan.wsds.util.CommunityUtils;
 import com.ehsan.wsds.util.Constants;
 
@@ -223,7 +224,7 @@ public class SolutionOne {
 		return result;		
 	}
 
-	public void pickBestNCommunities(List<Set<Integer>> templateVector, List<Set<Integer>> services, double[][] matrix, int[][] markMatrix, int time, int num) {
+	public void pickBestNCommunities(List<Set<Integer>> templateVector, List<Set<Integer>> services, double[][] matrix, int[][] markMatrix, int time, int num, Set<Node<Set<Integer>>> nodes) {
 		System.out.println("Num: " + num);
 		List<Set<Integer>> copyForLoopServices = new ArrayList<Set<Integer>>();
 		copyForLoopServices.addAll(services);
@@ -242,6 +243,9 @@ public class SolutionOne {
 					if (!services.contains(newGroup)) {
 						System.out.println("New group formed: " + newGroup);
 						services.add(newGroup);
+						
+						//Tree
+						
 					}
 
 					int i = templateVector.indexOf(serviceGroup);
@@ -300,11 +304,12 @@ public class SolutionOne {
 
 		int[][] markMatrix = new int[templateVector.size()][templateVector.size()];
 		List<Set<Integer>> services = CommunityUtils.extractSingleServices(templateVector);
+		Set<Node<Set<Integer>>> nodes = new HashSet<Node<Set<Integer>>>();
 
 		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
-			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/5);
+			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/15, nodes);
 		}
 
 		System.out.println("List of services: ");

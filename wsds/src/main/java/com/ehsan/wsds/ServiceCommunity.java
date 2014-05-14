@@ -73,7 +73,7 @@ public class ServiceCommunity {
 		//res = getRt() + getAv() + getTp() + getEx1() + getEx2();
 		res = ((getTp() - getRt()) *  getAv()) - getEx1() - getEx2();
 		if (services.size() > 0) {
-			res = res / (1.00 + 0.00 * (double)services.size());
+			res = res / (0.95 + 0.05 * (double)services.size());
 		}
 		return res;
 	}

@@ -443,7 +443,7 @@ public class ServiceDataSet {
 
 	public void run() throws IOException {
 		String intputFilenamePrefix = "";
-		String filenamePrefix = "score_0_00_";
+		String filenamePrefix = "score_0_05_";
 		String vectorFileName = "data/vector_template";
 				
 		//extractAverageServices("../wsdsinput/rtRate","data/"+intputFilenamePrefix+"service_rt_t", 0.0);
@@ -454,13 +454,13 @@ public class ServiceDataSet {
 		//generateTemplateVector("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", vectorFileName);
 		List<Set<Integer>> templateVector = loadTempalteVector(vectorFileName);		
 
-		makeServiceVector("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"vector_t");
-		makeServiceMatrix("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"matrix_t");
+		//makeServiceVector("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"vector_t");
+		//makeServiceMatrix("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", templateVector, "data/"+filenamePrefix+"matrix_t");
 
 		List<ServiceCommunity> serviceCommunityList = 
 				extractServicesOfTemplateVectorFromFile("data/"+intputFilenamePrefix+"service_rt_t", "data/"+intputFilenamePrefix+"service_tp_t", "data/"+intputFilenamePrefix+"service_av_t", templateVector, 0);
 		
-		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_5");		
+		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_15");		
 
 	}
 
