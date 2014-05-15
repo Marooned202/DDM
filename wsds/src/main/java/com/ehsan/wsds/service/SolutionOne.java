@@ -16,6 +16,7 @@ import com.ehsan.wsds.ServiceCommunity;
 import com.ehsan.wsds.tree.Node;
 import com.ehsan.wsds.util.CommunityUtils;
 import com.ehsan.wsds.util.Constants;
+import com.ehsan.wsds.util.TreeNodeUtils;
 
 public class SolutionOne {
 
@@ -224,7 +225,7 @@ public class SolutionOne {
 		return result;		
 	}
 
-	public void pickBestNCommunities(List<Set<Integer>> templateVector, List<Set<Integer>> services, double[][] matrix, int[][] markMatrix, int time, int num, Set<Node<Set<Integer>>> nodes) {
+	public void pickBestNCommunities(List<Set<Integer>> templateVector, List<Set<Integer>> services, double[][] matrix, int[][] markMatrix, int time, int num, List<Node<Set<Integer>>> nodes) {
 		System.out.println("Num: " + num);
 		List<Set<Integer>> copyForLoopServices = new ArrayList<Set<Integer>>();
 		copyForLoopServices.addAll(services);
@@ -243,9 +244,16 @@ public class SolutionOne {
 					if (!services.contains(newGroup)) {
 						System.out.println("New group formed: " + newGroup);
 						services.add(newGroup);
-						
+
 						//Tree
-						
+						Node<Set<Integer>> serviceGroupNode = TreeNodeUtils.findNode (nodes, serviceGroup);
+						Node<Set<Integer>> bestNode = TreeNodeUtils.findNode (nodes, best);
+						Node<Set<Integer>> newGroupNode = new Node<Set<Integer>>(newGroup);
+
+						bestNode.addChild(newGroupNode);
+						serviceGroupNode.addChild(newGroupNode);	
+
+						nodes.add(newGroupNode);						
 					}
 
 					int i = templateVector.indexOf(serviceGroup);
@@ -259,7 +267,7 @@ public class SolutionOne {
 					markMatrix[n][i] = -1;
 					markMatrix[j][n] = -1;
 					markMatrix[n][j] = -1;
-					
+
 					break;
 				}
 			}		
@@ -304,7 +312,8 @@ public class SolutionOne {
 
 		int[][] markMatrix = new int[templateVector.size()][templateVector.size()];
 		List<Set<Integer>> services = CommunityUtils.extractSingleServices(templateVector);
-		Set<Node<Set<Integer>>> nodes = new HashSet<Node<Set<Integer>>>();
+		List<Node<Set<Integer>>> nodes = TreeNodeUtils.extractNodes(services);
+
 
 		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
@@ -322,6 +331,17 @@ public class SolutionOne {
 					pw.println (serviceCommunity);
 					break;
 				}				
+			}
+		}
+		pw.close();				
+
+		// Trees:
+		pw=new PrintWriter(new FileOutputStream(output+"_tree"));
+		for (Node<Set<Integer>> node: nodes) {
+			if (node.getData().size() == 1) {
+				System.out.println("");
+				pw.println("");
+				TreeNodeUtils.printTree(node, 0, serviceCommunityList, pw);
 			}
 		}
 		pw.close();

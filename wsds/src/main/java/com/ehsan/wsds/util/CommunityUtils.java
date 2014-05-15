@@ -8,6 +8,7 @@ import java.util.Set;
 import com.ehsan.wsds.ExternalSetter;
 import com.ehsan.wsds.Service;
 import com.ehsan.wsds.ServiceCommunity;
+import com.ehsan.wsds.tree.Node;
 
 public class CommunityUtils {
 
@@ -82,5 +83,14 @@ public class CommunityUtils {
 
 		return singleServices;
 	}
-
+	
+	public static ServiceCommunity findServiceCommunity (Set<Integer> vector, List<ServiceCommunity> serviceCommunityList) {
+		for (ServiceCommunity serviceCommunity: serviceCommunityList) {
+			if (serviceCommunity.hasAllServicesOfSet(vector)) {
+				return serviceCommunity;
+			}
+		}
+		return null;
+	}
+	
 }
