@@ -14,6 +14,8 @@ import java.util.Random;
 import java.util.Set;
 
 import com.ehsan.wsds.service.SolutionOne;
+import com.ehsan.wsds.service.SolutionOneEvaluation;
+import com.ehsan.wsds.tree.Node;
 import com.ehsan.wsds.util.CommunityUtils;
 import com.ehsan.wsds.util.Constants;
 import com.ehsan.wsds.util.StatisticsUtils;
@@ -460,8 +462,16 @@ public class ServiceDataSet {
 		List<ServiceCommunity> serviceCommunityList = 
 				extractServicesOfTemplateVectorFromFile("data/"+rawIntputFilenamePrefix+"service_rt_t", "data/"+rawIntputFilenamePrefix+"service_tp_t", "data/"+rawIntputFilenamePrefix+"service_av_t", templateVector, 0);
 		
-		new SolutionOne().run(templateVector, serviceCommunityList, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_15");		
-
+		List<Node<Set<Integer>>> tree5 = new SolutionOne().run(templateVector, serviceCommunityList, 5, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_"+5);		
+		List<Node<Set<Integer>>> tree10 = new SolutionOne().run(templateVector, serviceCommunityList, 10, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_"+10);
+		List<Node<Set<Integer>>> tree15 = new SolutionOne().run(templateVector, serviceCommunityList, 15, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_"+15);
+		List<Node<Set<Integer>>> tree20 = new SolutionOne().run(templateVector, serviceCommunityList, 20, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_"+20);
+	
+		new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree5, "data/"+filenamePrefix+"_output_eval_5");		
+		new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree10, "data/"+filenamePrefix+"_output_eval_10");
+		new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree15, "data/"+filenamePrefix+"_output_eval_15");
+		new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree20, "data/"+filenamePrefix+"_output_eval_20");
+		
 	}
 
 

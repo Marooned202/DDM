@@ -305,7 +305,7 @@ public class SolutionOne {
 		return result;		
 	}
 
-	public void run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, String filename, String output) throws FileNotFoundException {
+	public List<Node<Set<Integer>>> run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, int learningRate, String filename, String output) throws FileNotFoundException {
 
 		//int[][] bestArray = findAllBestArray(templateVector, filename);
 		//int[] bestTest = findVectorBestArrayTime(templateVector, initialSingleServices, filename, 0);
@@ -313,12 +313,11 @@ public class SolutionOne {
 		int[][] markMatrix = new int[templateVector.size()][templateVector.size()];
 		List<Set<Integer>> services = CommunityUtils.extractSingleServices(templateVector);
 		List<Node<Set<Integer>>> nodes = TreeNodeUtils.extractNodes(services);
-
-
+		
 		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
-			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/15, nodes);
+			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/learningRate, nodes);
 		}
 
 		System.out.println("List of services: ");
@@ -342,10 +341,17 @@ public class SolutionOne {
 				System.out.println("");
 				pw.println("");
 				TreeNodeUtils.printTree(node, 0, serviceCommunityList, pw);
+				
+				ServiceCommunity bestServiceCommunity = TreeNodeUtils.findBestUtilityInTree(node, 0, serviceCommunityList);
+				pw.println("Max Utility: " + bestServiceCommunity);
+				pw.println("Max Utility: " + bestServiceCommunity.getScore());
+				pw.println("Max Utility Gain: " + 
+						(bestServiceCommunity.getScore() - CommunityUtils.findServiceCommunity((Set<Integer>)node.getData(),serviceCommunityList).getScore()));
 			}
-		}
+		}		
 		pw.close();
-
+		
+		return nodes;
 	}
 
 }

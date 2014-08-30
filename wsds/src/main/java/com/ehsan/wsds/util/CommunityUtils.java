@@ -93,4 +93,13 @@ public class CommunityUtils {
 		return null;
 	}
 	
+	
+	public static Set<Integer> serviceCommunityToSet (ServiceCommunity serviceCommunity) {
+		Set<Integer> serviceSet = new HashSet<Integer>();
+		
+		for (Service service: serviceCommunity.getServices()) {
+			serviceSet.add(service.getId());
+		}
+		return serviceSet;
+	}
 }

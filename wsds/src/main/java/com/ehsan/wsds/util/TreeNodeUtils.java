@@ -29,6 +29,28 @@ public class TreeNodeUtils {
 		}				
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static <T> ServiceCommunity findBestUtilityInTree (Node<T> node, int level, List<ServiceCommunity> serviceCommunityList) {
+		if (node == null) return null;		
+		ServiceCommunity serviceCommunity = CommunityUtils.findServiceCommunity((Set<Integer>)node.getData(), serviceCommunityList);
+		double max = serviceCommunity.getScore();
+		for (Node<T> children : node.getChildren()) {
+			ServiceCommunity bestServiceCommunity = findBestUtilityInTree(children, level+1, serviceCommunityList);
+			if (bestServiceCommunity.getScore() > max) {
+				serviceCommunity = bestServiceCommunity;
+				max = bestServiceCommunity.getScore();				
+			}
+		}			
+		return serviceCommunity;
+	}
+	
+//	@SuppressWarnings("unchecked")
+//	public static <T> ServiceCommunity findBestUtilityInTree (Set<Integer> service, int level, List<ServiceCommunity> serviceCommunityList) {
+//		if (service == null) return null;		
+//		
+//		return serviceCommunity;
+//	}
+	
 	public static List<Node<Set<Integer>>> extractNodes (List<Set<Integer>> vector) {
 		List<Node<Set<Integer>>> nodes = new ArrayList<Node<Set<Integer>>>();
 

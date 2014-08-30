@@ -7,6 +7,14 @@ public class Service {
 	double rt = 0;
 	double av = 0;
 	double tp = 0;	
+
+	public Service(int id) {
+		super();
+		this.id = id;
+	}
+	public Service() {
+		super();
+	}
 	
 	public int getId() {
 		return id;
