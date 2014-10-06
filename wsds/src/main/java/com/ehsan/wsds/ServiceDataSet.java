@@ -445,7 +445,7 @@ public class ServiceDataSet {
 
 	public void run() throws IOException {
 		String rawIntputFilenamePrefix = "";
-		String filenamePrefix = "score_0_00_";
+		String filenamePrefix = "score_0_05_";
 		String vectorFileName = "data/vector_template";
 				
 		//extractAverageServices("../wsdsinput/rtRate","data/"+rawIntputFilenamePrefix+"service_rt_t", 0.0);
@@ -467,10 +467,15 @@ public class ServiceDataSet {
 		List<Node<Set<Integer>>> tree15 = new SolutionOne().run(templateVector, serviceCommunityList, 15, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_"+15);
 		List<Node<Set<Integer>>> tree20 = new SolutionOne().run(templateVector, serviceCommunityList, 20, "data/"+filenamePrefix+"matrix_t","data/"+filenamePrefix+"output_communities_time_"+20);
 	
-		new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree5, "data/"+filenamePrefix+"_output_eval_5");		
-		new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree10, "data/"+filenamePrefix+"_output_eval_10");
-		new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree15, "data/"+filenamePrefix+"_output_eval_15");
-		new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree20, "data/"+filenamePrefix+"_output_eval_20");
+		List<ServiceCommunity> testServiceCommunityList = new SolutionOneEvaluation().getTestServiceList(serviceCommunityList);
+		double coef = 150;
+		//for (coef = 300; coef > 50; coef -= 25) {			
+			new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree5, testServiceCommunityList, coef, "data/"+filenamePrefix+"_output_eval_5_"+coef);		
+			new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree10, testServiceCommunityList, coef, "data/"+filenamePrefix+"_output_eval_10_"+coef);
+			new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree15, testServiceCommunityList, coef, "data/"+filenamePrefix+"_output_eval_15_"+coef);
+			new SolutionOneEvaluation().run(templateVector, serviceCommunityList, tree20, testServiceCommunityList, coef, "data/"+filenamePrefix+"_output_eval_20_"+coef);
+		//}
+
 		
 	}
 

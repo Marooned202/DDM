@@ -19,6 +19,8 @@ import com.ehsan.wsds.util.Constants;
 import com.ehsan.wsds.util.TreeNodeUtils;
 
 public class SolutionOne {
+	
+	double utilityGain = 0;
 
 	class ServiceScore implements Comparable<ServiceScore> {
 		Set<Integer> services;
@@ -253,7 +255,9 @@ public class SolutionOne {
 						bestNode.addChild(newGroupNode);
 						serviceGroupNode.addChild(newGroupNode);	
 
-						nodes.add(newGroupNode);						
+						nodes.add(newGroupNode);		
+						
+						utilityGain += matrix[templateVector.indexOf(serviceGroup)][templateVector.indexOf(best)];						
 					}
 
 					int i = templateVector.indexOf(serviceGroup);
@@ -314,14 +318,27 @@ public class SolutionOne {
 		List<Set<Integer>> services = CommunityUtils.extractSingleServices(templateVector);
 		List<Node<Set<Integer>>> nodes = TreeNodeUtils.extractNodes(services);
 		
+		utilityGain = 0.0;
+		
+		PrintWriter pw=new PrintWriter(new FileOutputStream(output));
 		for (int time = 0; time < Constants.MAX_TIME; time++) {			
 			System.out.println("\nTime: " + time);
 			double[][] matrix = extractMatrix(templateVector, markMatrix, filename, time);
 			pickBestNCommunities (templateVector, services, matrix, markMatrix, time, 1+(int)time/learningRate, nodes);
+			
+			int count = 0;
+			double communitySize = 0;
+			System.out.println("Gain: " + utilityGain);
+			pw.println("Gain: " + utilityGain);									
+			for (Set<Integer> service: services) {										
+				count++;
+				communitySize += service.size();
+			}			
+			pw.println ("Community Count: " + count);
+			pw.println ("Community Size: " + communitySize/(double)count);											
 		}
-
-		System.out.println("List of services: ");
-		PrintWriter pw=new PrintWriter(new FileOutputStream(output));
+	
+		System.out.println("List of services: ");		
 		for (Set<Integer> service: services) {						
 			//System.out.println(service);
 			for (ServiceCommunity serviceCommunity: serviceCommunityList) {
@@ -332,8 +349,8 @@ public class SolutionOne {
 				}				
 			}
 		}
-		pw.close();				
-
+		pw.close();
+		
 		// Trees:
 		pw=new PrintWriter(new FileOutputStream(output+"_tree"));
 		for (Node<Set<Integer>> node: nodes) {
@@ -347,6 +364,11 @@ public class SolutionOne {
 				pw.println("Max Utility: " + bestServiceCommunity.getScore());
 				pw.println("Max Utility Gain: " + 
 						(bestServiceCommunity.getScore() - CommunityUtils.findServiceCommunity((Set<Integer>)node.getData(),serviceCommunityList).getScore()));
+				double highScore = bestServiceCommunity.getScore();
+				double lowScore =  CommunityUtils.findServiceCommunity((Set<Integer>)node.getData(),serviceCommunityList).getScore();
+				pw.printf("Max Utility Gain Pertentage 30: %.5f\n",((highScore + 30) - (lowScore + 30)) / (lowScore + 30)); 
+				pw.printf("Max Utility Gain Pertentage 50: %.5f\n",((highScore + 50) - (lowScore + 50)) / (lowScore + 50));
+				
 			}
 		}		
 		pw.close();

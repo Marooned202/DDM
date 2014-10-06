@@ -18,15 +18,7 @@ public class SolutionOneEvaluation {
 
 	
 
-	public void run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, List<Node<Set<Integer>>> nodes, String output) throws FileNotFoundException {				
-		
-		Random rnd = new Random();
-		List<ServiceCommunity> testServiceCommunityList = new ArrayList<ServiceCommunity>();
-		while (testServiceCommunityList.size() < 100) {
-			ServiceCommunity sc = serviceCommunityList.get(rnd.nextInt(serviceCommunityList.size()));
-			if (sc.getServices().size() != 1) continue;
-			if (!testServiceCommunityList.contains(sc)) testServiceCommunityList.add(sc);
-		}
+	public void run (List<Set<Integer>> templateVector, List<ServiceCommunity> serviceCommunityList, List<Node<Set<Integer>>> nodes, List<ServiceCommunity> testServiceCommunityList,  double coef, String output) throws FileNotFoundException {					
 		
 		List<ServiceCommunity> singleServiceCommunities = new ArrayList<ServiceCommunity>();
 		List<Set<Integer>> singleServices = CommunityUtils.extractSingleServices(templateVector);
@@ -40,7 +32,7 @@ public class SolutionOneEvaluation {
 		for (ServiceCommunity serviceCommunity: testServiceCommunityList) {			
 			pw.println("Community: " + serviceCommunity);
 			
-			ServiceCommunity closestServiceCommunity = findClosestServiceCommunity (serviceCommunity, singleServiceCommunities);
+			ServiceCommunity closestServiceCommunity = findClosestServiceCommunity (serviceCommunity, singleServiceCommunities, pw);
 			
 			pw.println("Closest Community: " + closestServiceCommunity);
 			
@@ -79,7 +71,7 @@ public class SolutionOneEvaluation {
 			}
 			pw.println("Best: " + best);	
 			
-			pw.println("Best service community possible:: " + ((Math.abs(newServiceCommunity.getScore()) * (200) > best.getScore())?1:0));	
+			pw.println("Best service community possible:: " + ((Math.abs(newServiceCommunity.getScore()) * (coef) > best.getScore())?1:0));	
 			pw.println("Is only rational Best service community possible: " + ((best.getScore() * (25/100) > newServiceCommunity.getScore())?1:0));	
 			
 			pw.println("");
@@ -88,8 +80,19 @@ public class SolutionOneEvaluation {
 		pw.close();				
 	}
 
+	public List<ServiceCommunity> getTestServiceList(List<ServiceCommunity> serviceCommunityList) {
+		Random rnd = new Random();
+		List<ServiceCommunity> testServiceCommunityList = new ArrayList<ServiceCommunity>();
+		while (testServiceCommunityList.size() < 1000) {
+			ServiceCommunity sc = serviceCommunityList.get(rnd.nextInt(serviceCommunityList.size()));
+			if (sc.getServices().size() != 1) continue;
+			if (!testServiceCommunityList.contains(sc)) testServiceCommunityList.add(sc);
+		}
+		return testServiceCommunityList;
+	}
+
 	public ServiceCommunity findClosestServiceCommunity(ServiceCommunity serviceCommunity,
-			List<ServiceCommunity> serviceCommunities) {
+			List<ServiceCommunity> serviceCommunities, PrintWriter pw) {
 
 		double distance = Double.MAX_VALUE;
 		ServiceCommunity res = null;
@@ -99,6 +102,7 @@ public class SolutionOneEvaluation {
 				res = sc;
 			}
 		}		
+		pw.println("Closest Distance: " + distance);
 		return res;
 	}
 
