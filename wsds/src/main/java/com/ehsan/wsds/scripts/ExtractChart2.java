@@ -88,12 +88,7 @@ public class ExtractChart2 {
 				line = input.readLine();
 				line = input.readLine();
 				int rational = parseFirstNumber(line);
-				if (rational == 1) {
-					System.out.println((Math.random()*250) * (Math.random() > 0.8?1.5:0.80));
-				}
-				else {
-					System.out.println((Math.random()*50) * (Math.random() > 0.85?2.9:0.80) * (Math.random() > 0.55? 1:0));
-				}
+
 				//System.out.println((int)rational);				
 				
 				if (rational == 0) num0++;
